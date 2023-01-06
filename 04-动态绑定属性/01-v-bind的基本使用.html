@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>v-bind的基本使用</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-bind的基本使用</title>
+    <style>
+        .active {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-  <div id="app">
+<div id="app">
     <!-- 错误的做法这里不能使用Mustache语法 -->
     <!-- <img v-bind:src="{{imgURL}}" alt=""> -->
     <!-- 正确的做法使用v-bind指令 -->
     <img v-bind:src="imgURL" alt="">
-    <a v-bind:href="aHerf"></a>
+    <a v-bind:href="aHerf">百度一下</a>
     <!-- 语法糖写法 -->
     <img :src="imgURL" alt="">
     <a :href="aHerf"></a>
 
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-  <script>
+    <h2 class="title" :class="{active:isActive}">{{message}}</h2>
+    <h2 class="title" :class="getClasses()">{{message}}</h2>
+    <button @click="change">点击变色</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script>
     const app = new Vue({
-      el:"#app",
-      data:{
-        message:"你好啊",
-        imgURL:"https://cn.bing.com/th?id=OIP.NaSKiHPRcquisK2EehUI3gHaE8&pid=Api&rs=1",
-        aHerf:"http://www.baidu.com"
-      }
+        el: "#app",
+        data: {
+            message: "你好啊",
+            imgURL: "https://cn.bing.com/th?id=OIP.NaSKiHPRcquisK2EehUI3gHaE8&pid=Api&rs=1",
+            aHerf: "http://www.baidu.com",
+            active: "active",
+            isActive: true
+        },
+        methods: {
+            change() {
+                this.isActive = !this.isActive;
+            },
+            getClasses() {
+                return {active: this.isActive}
+            }
+        },
     })
-  </script>
+</script>
 </body>
 </html>
