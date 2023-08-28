@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Component</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <template id="cpn2">
+        <div>
+            <h2>组件模板的分离写法</h2>
+            <p>template标签</p>
+        </div>
+    </template>
+    <cpn1></cpn1>
+    <h2>全局组件</h2>
+    <my-cpn></my-cpn>
+    <my-cpn1></my-cpn1>
+    <h2>局部组件</h2>
+    <cpnc></cpnc>
+    <cpnc3></cpnc3>
+
+</div>
+
+<script type="text/x-template" id="cpn1">
+    <div>
+        <h2>组件模板分离写法</h2>
+        <p>script标签注意类型是text/x-template</p>
+    </div>
+</script>
+<script>
+    const cpnc2 = Vue.extend({
+        template: `
+            <div>
+                <h2>title</h2>
+                <p>内容-title</p>
+                <p>内容2-title</p>
+            </div>
+        `
+    })
+    const cpnc = Vue.extend({
+        template: `
+          <div>
+            <h2>标题</h2>
+            <p>内容</p>
+            <p>内容2</p>
+            <cpnc2></cpnc2>
+            <h3>{{ msg }}</h3>
+          </div>
+        `,
+        components: {
+            cpnc2
+        },
+        data() {
+            return {
+                msg: "组件的数据存放必须要是一个函数"
+            }
+        }
+    })
+    //全局组件
+    Vue.component('my-cpn', cpnc)
+    // 语法糖-全局组件
+    Vue.component('my-cpn1', {
+        template: `
+            <div>
+                <h2>全局组件-语法糖</h2>
+                <p>内容-语法糖</p>
+                <p>内容2-语法糖</p>
+            </div>
+        `
+    })
+
+    const vue = new Vue({
+        el: "#app",
+        components: {//局部组件
+            cpnc,
+            cpnc3: {
+                template: `
+                    <div>
+                        <h2>局部组件-语法糖</h2>
+                        <p>内容-语法糖</p>
+                        <p>内容2-语法糖</p>
+                    </div>
+                `
+            },
+            cpn1: {
+                template: '#cpn1'
+            },
+            cpn2: {
+                template: '#cpn2'
+            }
+        }
+    })
+</script>
+</body>
+</html>

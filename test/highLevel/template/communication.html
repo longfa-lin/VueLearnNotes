@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>communication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>父组件</h2>
+    <h2>{{message}}</h2>
+    <h2>{{num1}}</h2>
+    <input type="text" v-model="num1">
+    <cpn :cMovies="movies" :cMessage="message" :c-Person="person" @itemclick="cpnClick"
+         @cmessagechange="messageChange" :number1="num1" @number1change="num1Change" ref="aaa"></cpn>
+    <button @click="refBtnClick">点击我</button>
+</div>
+
+<template id="cpn">
+    <div>
+        <ul>
+            <li v-for="(item,index) in cmovies" :key="index" @click="btnClick(item)">{{item}}</li>
+        </ul>
+        <h2>{{cmessage}}</h2>
+        <h2>{{dcmessage}}</h2>
+        <input type="text" :value="dcmessage" @input="messageInput">
+        <h2>{{cPerson}}</h2>
+        <h2>{{number1}}</h2>
+        <input type="text" v-model="dnumber1">
+    </div>
+</template>
+<script>
+    function Person(firstName, lastName) {
+        this.firstName = firstName
+        this.lastName = lastName
+    }
+
+    const cpn = {
+        template: '#cpn',
+        props: {
+            cmessage: {
+                type: String,
+                default: 'zzzzsss',
+                required: true
+            },
+            cmovies: {
+                type: Array,
+                default() {
+                    return [1, 2, 3, 4]
+                }
+            },
+            cPerson: Person,
+            number1: [String, Number],
+            data() {
+                return {}
+            },
+            methods: {}
+        },
+        data() {
+            return {
+                dcmessage: this.cmessage,
+                dnumber1: this.number1
+            }
+        },
+        methods: {
+            messageInput(event) {
+                this.dcmessage = event.target.value
+                this.$emit('cmessagechange', this.dcmessage)
+            },
+            btnClick(item) {
+                console.log(item);
+                this.$emit('itemclick', item)
+            },
+            showMessage() {
+                console.log("showMessage")
+            }
+        },
+        watch: {
+            dnumber1(newValue) {
+                this.dnumber1 = newValue * 100
+                this.$emit('number1change', newValue)
+            }
+        }
+    }
+    const vue = new Vue({
+        el: "#app",
+        data: {
+            message: "你好",
+            movies: ["复仇者联盟", "钢铁侠", "星际穿越", "哪吒传奇"],
+            person: new Person('lin', 'longfa'),
+            // {
+            //     firstName: 'lin',
+            //     lastName: 'longfa'
+            // }
+            num1: 1
+        },
+        components: {
+            cpn
+        },
+        methods: {
+            cpnClick(item) {
+                console.log("cpnClick" + item)
+            },
+            messageChange(value) {
+                this.message = value
+            },
+            num1Change(value) {
+                this.num1 = value
+            },
+            refBtnClick() {
+                console.log(this.$children[0].showMessage)
+                // for (let cpn of this.$children) {
+                //     console.log(cpn.showMessage)
+                // }
+                console.log(this.$refs.aaa.dcmessage)
+            }
+        }
+    })
+</script>
+</body>
+</html>
